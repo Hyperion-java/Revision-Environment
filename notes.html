@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temporary Notepad</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  background: #1f1f1f;
+  border: none;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: #333;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1f1f1f;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  min-width: 300px;
+  width: 90%;
+  max-width: 600px;
+}
+
+h2 {
+  margin: 0 0 20px 0;
+  color: #e0e0e0;
+}
+
+textarea {
+  width: 100%;
+  height: 300px;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background: #333;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  resize: none;
+}
+
+button {
+  padding: 10px 20px;
+  background: #1f1f1f;
+  border: none;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 15px;
+}
+
+button:hover {
+  background: #333;
+}
+</style>
+</head>
+<body>
+
+<button class="back-button" onclick="window.location.href='index.html'">← Back</button>
+
+<div class="container">
+  <div class="section">
+    <h2>Temporary Notepad</h2>
+    <textarea id="notepad" placeholder="Start typing..."></textarea>
+    <button onclick="saveNote()">Save Note</button>
+    <button onclick="clearNote()">Clear Note</button>
+  </div>
+</div>
+
+<script>
+// Load note from cookie on page load
+window.onload = function() {
+  const note = getCookie('tempNote');
+  if (note) {
+    document.getElementById('notepad').value = note;
+  }
+};
+
+// Save note to cookie
+function saveNote() {
+  const note = document.getElementById('notepad').value;
+  setCookie('tempNote', note, 1); // Expires in 1 day
+  alert('Note saved temporarily!');
+}
+
+// Clear note and cookie
+function clearNote() {
+  document.getElementById('notepad').value = '';
+  setCookie('tempNote', '', -1); // Delete cookie
+}
+
+// Cookie helpers
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days*24*60*60*1000));
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+  const cname = name + "=";
+  const decoded = decodeURIComponent(document.cookie);
+  const ca = decoded.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i].trim();
+    if (c.indexOf(cname) === 0) return c.substring(cname.length, c.length);
+  }
+  return "";
+}
+</script>
+
+</body>
+</html>

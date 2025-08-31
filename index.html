@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revision Environment</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .desktop {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .icon {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #1f1f1f;
+    border-radius: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #e0e0e0;
+    font-weight: 500;
+    transition: transform 0.2s, background 0.2s;
+    text-align: center;
+  }
+
+  .icon:hover {
+    transform: scale(1.1);
+    background: #333;
+  }
+
+  .icon img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+  }
+
+  .icon span {
+    font-size: 14px;
+  }
+
+  .window {
+    position: absolute;
+    width: 450px;
+    max-width: 90%;
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    color: #e0e0e0;
+    font-weight: 400;
+  }
+
+  .window-header {
+    background: #333;
+    color: #fff;
+    padding: 10px 15px;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    user-select: none;
+  }
+
+  .window-content {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .window-content ul {
+    padding-left: 20px;
+  }
+
+  .close-btn {
+    width: 20px;
+    height: 20px;
+    background: #ff5c5c;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    line-height: 18px;
+    font-weight: bold;
+    color: white;
+  }
+</style>
+</head>
+<body>
+  <div class="desktop">
+    <a href="flashcards.html" class="icon">
+      <span>Flashcards</span>
+    </a>
+
+    <a href="quiz.html" class="icon">
+      <img src="https://img.icons8.com/ios/100/ffffff/test-passed.png" alt="Quiz">
+      <span>Quiz</span>
+    </a>
+
+    <a href="notes.html" class="icon">
+      <img src="https://img.icons8.com/ios/100/ffffff/note.png" alt="Notes">
+      <span>Notes</span>
+    </a>
+
+    <a href="timer.html" class="icon">
+      <img src="https://img.icons8.com/ios/100/ffffff/stopwatch.png" alt="Timer">
+      <span>Timer</span>
+    </a>
+
+    <a href="games.html" class="icon">
+      <img src="https://img.icons8.com/ios/100/ffffff/controller.png" alt="Games">
+      <span>Games</span>
+    </a>
+  </div>
+
+  <div id="welcomeWindow" class="window" style="left:50%; top:50%; transform: translate(-50%, -50%); display:flex;">
+    <div class="window-header">
+      <span>Revision Environment</span>
+      <div class="close-btn" onclick="closeWindow('welcomeWindow')">×</div>
+    </div>
+    <div class="window-content">
+      <p>Welcome to the Revision Environment, created by Phillip ######.</p>
+      <p>This environment is designed to help you study and stay organized. It includes:</p>
+      <ul>
+        <li><strong>Flashcard Maker</strong> for quick revision.</li>
+        <li><strong>Quiz Taker</strong> to test your knowledge.</li>
+        <li><strong>Temporary Notes</strong> saved in your browser.</li>
+        <li><strong>Timer and Stopwatch</strong> to manage study sessions.</li>
+        <li><strong>Fun games</strong> to refresh your mind.</li>
+      </ul>
+      <p>Get started and make the most out of your revision experience!</p>
+    </div>
+  </div>
+
+<script>
+  function closeWindow(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  const windows = document.querySelectorAll('.window');
+  windows.forEach(win => {
+    const header = win.querySelector('.window-header');
+    header.onmousedown = function(e) {
+      let offsetX = e.clientX - win.offsetLeft;
+      let offsetY = e.clientY - win.offsetTop;
+
+      function mouseMoveHandler(e) {
+        win.style.left = (e.clientX - offsetX) + 'px';
+        win.style.top = (e.clientY - offsetY) + 'px';
+      }
+
+      function mouseUpHandler() {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+      }
+
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler);
+    }
+  });
+
+  window.onload = function() {
+    document.getElementById('welcomeWindow').style.display = 'flex';
+  }
+</script>
+</body>
+</html>

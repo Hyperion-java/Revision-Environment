@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.desktop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.icon {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1f1f1f;
+  border-radius: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #e0e0e0;
+  font-weight: 500;
+  transition: transform 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.icon:hover {
+  transform: scale(1.1);
+  background: #333;
+}
+
+.icon img {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 8px;
+}
+
+.icon span {
+  font-size: 14px;
+}
+
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  background: #1f1f1f;
+  border: none;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: #333;
+}
+</style>
+</head>
+<body>
+  <button class="back-button" onclick="window.location.href='index.html'">← Back</button>
+  <div class="desktop">
+    <a href="#" class="icon" onclick="openGame('https://playsnake.org')">
+      <img src="https://img.icons8.com/ios/100/ffffff/snake.png" alt="Snake">
+      <span>Snake</span>
+    </a>
+
+    <a href="#" class="icon" onclick="openGame('https://www.2048game.com/')">
+      <img src="https://img.icons8.com/ios/100/ffffff/2048.png" alt="2048">
+      <span>2048</span>
+    </a>
+
+    <a href="#" class="icon" onclick="openGame('https://www.crazygames.com/game/arkanoid')">
+      <img src="https://img.icons8.com/ios/100/ffffff/brick-wall.png" alt="Breakout">
+      <span>Breakout</span>
+    </a>
+
+    <a href="#" class="icon" onclick="openGame('https://agar.io/')">
+      <img src="https://img.icons8.com/ios/100/ffffff/circle.png" alt="Agar.io">
+      <span>Agar.io</span>
+    </a>
+  </div>
+
+<script>
+function openGame(url) {
+  window.open(url, '_blank', 'width=800,height=600,resizable=yes');
+}
+</script>
+</body>
+</html>
