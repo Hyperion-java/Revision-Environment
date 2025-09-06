@@ -90,16 +90,33 @@ button:hover {
 .flashcard {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #000;
+  justify-content: center;       /* vertical center */
+  align-items: center;           /* horizontal center */
+  background: #1a1a1a;
   color: #fff;
   border-radius: 16px;
   padding: 40px;
-  min-height: 200px;
+  min-height: 250px;
+  min-width: 450px;              /* landscape feel */
+  max-width: 100%;
   text-align: center;
   font-size: 20px;
-  white-space: pre-wrap;
+  white-space: pre-wrap;         /* preserves line breaks */
+  word-wrap: break-word;         /* break long words */
+  overflow-wrap: break-word;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.flashcard-question {
+  font-weight: bold;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.flashcard-answer {
+  font-weight: normal;
+  font-size: 22px;
+  color: #ccc;
 }
 
 .tip {
@@ -124,29 +141,20 @@ button:hover {
     <button onclick="generateFlashcards()">Generate Flashcards</button>
     <button onclick="downloadFlashcards()">Download PDF</button>
     <div class="tip">
-I will provide you with a list of questions and answers.
-
-Please convert them into the following JSON-like format:
-
-"Q1": "Question text",
-"A1": "Answer text",
-
-"Q2": "Question text",
-"A2": "Answer text",
-
-...and so on for all questions provided. 
-
-Here is the text to format: 
-
-[PASTE YOUR TEXT HERE]
-</pre>
-   
+      I will provide you with a list of questions and answers.
+      Please convert them into the following JSON-like format:
+      "Q1": "Question text",
+      "A1": "Answer text",
+      ...
     </div>
   </div>
 
   <div class="flashcard-section">
     <h2>Flashcards</h2>
-    <div id="flashcard" class="flashcard">No flashcards yet.</div>
+    <div id="flashcard" class="flashcard">
+      <div class="flashcard-question">No flashcards yet.</div>
+      <div class="flashcard-answer"></div>
+    </div>
     <div>
       <button onclick="prevCard()">Previous</button>
       <button onclick="nextCard()">Next</button>
@@ -164,8 +172,7 @@ function generateFlashcards() {
     const input = JSON.parse(document.getElementById('jsonInput').value);
     flashcards = [];
     for (let i = 1; input['Q'+i]; i++) {
-      // Add double line break between question and answer
-      flashcards.push({question: input['Q'+i], answer: "\n\n" + input['A'+i]});
+      flashcards.push({question: input['Q'+i], answer: input['A'+i]});
     }
     currentIndex = 0;
     showCard();
@@ -177,10 +184,12 @@ function generateFlashcards() {
 function showCard() {
   const card = document.getElementById('flashcard');
   if (flashcards.length === 0) {
-    card.textContent = 'No flashcards yet.';
+    card.querySelector('.flashcard-question').textContent = 'No flashcards yet.';
+    card.querySelector('.flashcard-answer').textContent = '';
     return;
   }
-  card.textContent = flashcards[currentIndex].question + flashcards[currentIndex].answer;
+  card.querySelector('.flashcard-question').textContent = flashcards[currentIndex].question;
+  card.querySelector('.flashcard-answer').textContent = flashcards[currentIndex].answer;
 }
 
 function nextCard() {
@@ -198,15 +207,41 @@ function prevCard() {
 function downloadFlashcards() {
   if (flashcards.length === 0) return;
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF({ orientation: 'landscape' });
+
   flashcards.forEach((fc, i) => {
     if (i > 0) doc.addPage();
-    doc.setFillColor(0,0,0);
-    doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    // Background
+    doc.setFillColor(26,26,26); // dark gray
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+    const padding = 40;
+    const maxWidth = pageWidth - 2 * padding;
+
+    // Question
+    doc.setFontSize(28);
+    doc.setFont("helvetica", "bold");
     doc.setTextColor(255,255,255);
-    doc.setFontSize(20);
-    doc.text(fc.question + fc.answer, 20, 40);
+    const questionLines = doc.splitTextToSize(fc.question, maxWidth);
+
+    // Answer
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(200,200,200);
+    const answerLines = doc.splitTextToSize(fc.answer, maxWidth);
+
+    const spacing = 10; // extra lines between question & answer
+    const totalLines = [...questionLines, ...Array(spacing).fill(""), ...answerLines];
+
+    const lineHeight = 12;
+    const yPos = (pageHeight - totalLines.length * lineHeight) / 2;
+
+    doc.text(totalLines, pageWidth / 2, yPos, { align: 'center' });
   });
+
   doc.save("flashcards.pdf");
 }
 </script>
